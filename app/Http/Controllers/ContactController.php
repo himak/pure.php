@@ -34,11 +34,19 @@ class ContactController
         }
 
         if ($errors) {
-            return ['success' => false, 'errors' => $errors];
+            return [
+                'errors' => $errors
+            ];
         }
 
-        Contact::query()
-            ->create(['name' => $name, 'email' => $email]);
-        return ['success' => true];
+        $contact = Contact::query()
+            ->create(['name' => $name, 'email' => $email])
+            ->toArray();
+
+        $html = view_content('contacts/_partials/table-row', ['contact' => $contact]);
+
+        return [
+            'data' => $html
+        ];
     }
 }

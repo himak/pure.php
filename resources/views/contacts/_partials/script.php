@@ -47,12 +47,12 @@
                 data: { name, email },
                 timeout: 10000,
                 success: function(response) {
-                    if (response.success) {
+                    if (response.data) {
                         $modal.modal("hide");
+
                         showAlert("Kontakt bol úspešne uložený.", "success");
-                        if (response.row) {
-                            $tableBody.prepend(response.row);
-                        }
+
+                        $tableBody.prepend(response.data);
                         $form[0].reset();
                     } else if (response.errors) {
                         if (response.errors.name) {
