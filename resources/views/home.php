@@ -38,8 +38,8 @@
 
         $('#contacts-tab').on('shown.bs.tab', function () {
             if (!contactsLoaded) {
-                $.get('routes/web/contacts.php', function (html) {
-                    setTimeout(function () {
+                $.get('routes/web/contacts/index.php', function (html) {
+                    // setTimeout(function () {
                         $('#contacts').html(html);
                         contactsLoaded = true;
                     // }, 2000);
