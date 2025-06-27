@@ -15,5 +15,6 @@ $contacts = $controller->index();
 </div>
 
 <?php view('contacts/_partials/table', ['contacts' => $contacts]); ?>
-<?php view('contacts/_partials/modal'); ?>
-<?php view('contacts/_partials/script'); ?>
+
+<?php include __DIR__ . '/../../views/contacts/_partials/modal.php'; ?>
+<?php include __DIR__ . '/../../views/contacts/_partials/script.php'; ?>

@@ -22,12 +22,20 @@
 
         $form.on("submit", function(e) {
             e.preventDefault();
-            $form.find(".form-control").removeClass("is-invalid").next(".invalid-feedback").text("");
+
+            $form.find(".form-control")
+                .removeClass("is-invalid")
+                .next(".invalid-feedback").text("");
 
             const name = $("#name").val().trim();
             const email = $("#email").val().trim();
 
+            // Prepis osetrenych hodnot spat do formulára
+            $("#name").val(name);
+            $("#email").val(email);
+
             let hasError = false;
+
             if (!name) {
                 $("#name").addClass("is-invalid").next(".invalid-feedback").text("Meno je povinné.");
                 hasError = true;
@@ -47,11 +55,14 @@
                 data: { name, email },
                 timeout: 10000,
                 success: function(response) {
+
+                    console.log(response);
+
                     if (response.success) {
                         $modal.modal("hide");
                         showAlert("Kontakt bol úspešne uložený.", "success");
-                        if (response.row) {
-                            $tableBody.prepend(response.row);
+                        if (response.data) {
+                            $tableBody.prepend(response.data.html);
                         }
                         $form[0].reset();
                     } else if (response.errors) {

@@ -8,3 +8,7 @@ Create database tables
 Run app
 
     php -S localhost:8888
+
+Set up files permission for templates
+
+    chmod -R 0777 storage/cache/views

@@ -2,9 +2,13 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Spatie\Ignition\Ignition;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+Ignition::make()->register();
+
+// Initialization Eloquent
 $capsule = new Capsule;
 
 $capsule->addConnection([

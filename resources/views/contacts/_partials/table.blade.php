@@ -8,9 +8,8 @@
     </tr>
     </thead>
     <tbody>
-    <?php /** @var array $contacts */ ?>
-    <?php foreach ($contacts as $c): ?>
-        <?php view('contacts._partials.table-row', ['contact' => $c]); ?>
-    <?php endforeach; ?>
+        @foreach($contacts as $contact)
+            @include('contacts._partials.table-row', ['contact' => $contact])
+        @endforeach
     </tbody>
 </table>

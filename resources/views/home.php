@@ -10,6 +10,10 @@
     <li class="nav-item">
         <a class="nav-link" id="orders-tab" data-toggle="tab" href="#orders" role="tab">Objednávky</a>
     </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/shop.php">Shop</a>
+    </li>
 </ul>
 
 <div class="tab-content mt-3" id="mainTabContent">
@@ -35,10 +39,10 @@
         $('#contacts-tab').on('shown.bs.tab', function () {
             if (!contactsLoaded) {
                 $.get('routes/web/contacts.php', function (html) {
-                    setTimeout(function () {
+                    // setTimeout(function () {
                         $('#contacts').html(html);
                         contactsLoaded = true;
-                    }, 2000);
+                    // }, 2000);
                 }).fail(function () {
                     $('#contacts').html('<div class="text-danger">Chyba pri načítaní kontaktov.</div>');
                 });

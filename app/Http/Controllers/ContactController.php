@@ -3,7 +3,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ContactResource;
 use App\Models\Contact;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ContactController
 {
@@ -14,31 +19,59 @@ class ContactController
             ->get()->toArray();
     }
 
-    public function store(array $data): array
+    public function store(Request $request)
     {
-        $name = trim($data['name'] ?? '');
-        $email = trim($data['email'] ?? '');
+        // Spravíme si data s automatickým trimom
+        $data = array_map('trim', $request->only(['name', 'email']));
 
-        $errors = [];
+        // Voliteľné vlastné správy a atribúty (názvy polí)
+        $messages = [
+            'required' => 'Pole :attribute je povinné.',
+            'min' => 'Pole :attribute musí mať aspoň :min znakov.',
+            'email' => 'Pole :attribute musí byť platná e-mailová adresa.',
+        ];
 
-        if ($name === '') {
-            $errors['name'] = 'Meno je povinné.';
-        } elseif (mb_strlen($name) < 2) {
-            $errors['name'] = 'Meno musí mať aspoň 2 znaky.';
+        $customAttributes = [
+            'email' => 'emailová adresa',
+            'name' => 'meno',
+        ];
+
+        // Vytvorenie validátora
+        $validator = Validator::make($data, [
+            'name' => 'required|string|min:10',
+            'email' => 'required|email',
+        ], $messages, $customAttributes);
+
+        // Ak validácia zlyhá, vrátime chyby
+        if ($validator->fails()) {
+
+            return Response::json([
+                'message' => 'errors',
+            ]);
+
+            $response = Response::json([
+                'message' => 'errors',
+                'errors' => $validator->errors()->toArray(),
+            ], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
+
+            var_dump($response->status());
+            die();
+
+            return $response;
         }
 
-        if ($email === '') {
-            $errors['email'] = 'Email je povinný.';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = 'Zadajte platný email.';
-        }
+        // Validované a otrimované dáta
+        $validData = $validator->validated();
 
-        if ($errors) {
-            return ['success' => false, 'errors' => $errors];
-        }
+        // Vytvor nový Contact v DB
+        $contact = Contact::query()->create([
+            'name' => $validData['name'],
+            'email' => $validData['email'],
+        ]);
 
-        Contact::query()
-            ->create(['name' => $name, 'email' => $email]);
-        return ['success' => true];
+        return Response::json([
+            'message' => 'success',
+            'data' => view_content('contacts._partials.table-row', ['contact' => $contact]),
+        ], ResponseAlias::HTTP_CREATED);
     }
 }

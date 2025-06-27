@@ -1,19 +1,20 @@
-<?php declare(strict_types=1); ?>
-<!DOCTYPE html>
-<html lang="sk">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/app/bootstrap.php';
+
+require_once __DIR__ . '/resources/views/layouts/header.php';
+
+?>
 <body class="p-4">
 
     <h1>Website</h1>
 
     <div id="app"></div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <?php
+        require_once __DIR__ . '/resources/views/layouts/footer.php';
+    ?>
 
     <script>
         $(function () {
@@ -31,4 +32,4 @@
     </script>
 
 </body>
-</html>
+
