@@ -3,7 +3,8 @@ declare(strict_types=1);
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../../app/bootstrap.php';
-use App\Http\Controllers\ContactController;
+
+use App\Http\Controllers\Api\ContactController;
 use Illuminate\Http\Request;
 
 $request = Request::capture();

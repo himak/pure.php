@@ -10,7 +10,7 @@
     <tbody>
     <?php /** @var array $contacts */ ?>
     <?php foreach ($contacts as $c): ?>
-        <?php view('contacts._partials.table-row', ['contact' => $c]); ?>
+        <?php show('contacts._partials.table-row', ['contact' => $c]); ?>
     <?php endforeach; ?>
     </tbody>
 </table>

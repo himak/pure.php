@@ -7,6 +7,6 @@ require_once __DIR__ . '/../../../app/bootstrap.php';
 
 
 $controller = new ContactController();
-$contacts = $controller->index();
+$html = $controller->index();
 
-include __DIR__ . '/../../../resources/views/contacts/index.php';
+echo $html;
