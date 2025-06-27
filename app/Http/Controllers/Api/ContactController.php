@@ -9,14 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactController
 {
-    public function index(): array
-    {
-        return Contact::query()
-            ->orderBy('id', 'desc')
-            ->get()->toArray();
-    }
-
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         // Spravíme si data s automatickým trimom
         $data = array_map('trim', $request->only(['name', 'email']));
