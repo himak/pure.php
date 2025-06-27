@@ -1,6 +1,8 @@
 {
     "require": {
-        "illuminate/database": "^12.19"
+        "illuminate/database": "^12.19",
+        "illuminate/http": "^12.19",
+        "illuminate/validation": "^12.19"
     },
     "autoload": {
         "psr-4": {

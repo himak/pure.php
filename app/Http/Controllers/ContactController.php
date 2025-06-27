@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ContactController
 {
@@ -14,34 +16,45 @@ class ContactController
             ->get()->toArray();
     }
 
-    public function store(array $data): array
+    public function store(Request $request)
     {
-        $name = trim($data['name'] ?? '');
-        $email = trim($data['email'] ?? '');
+        // Spravíme si data s automatickým trimom
+        $data = array_map('trim', $request->only(['name', 'email']));
 
-        $errors = [];
+        // Voliteľné vlastné správy a atribúty (názvy polí)
+        $messages = [
+            'required' => 'Pole :attribute je povinné.',
+            'min' => 'Pole :attribute musí mať aspoň :min znakov.',
+            'email' => 'Pole :attribute musí byť platná e-mailová adresa.',
+        ];
 
-        if ($name === '') {
-            $errors['name'] = 'Meno je povinné.';
-        } elseif (mb_strlen($name) < 2) {
-            $errors['name'] = 'Meno musí mať aspoň 2 znaky.';
-        }
+        $customAttributes = [
+            'email' => 'emailová adresa',
+            'name' => 'meno',
+        ];
 
-        if ($email === '') {
-            $errors['email'] = 'Email je povinný.';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = 'Zadajte platný email.';
-        }
+        // Vytvorenie validátora
+        $validator = Validator::make($data, [
+            'name' => 'required|string|min:10',
+            'email' => 'required|email',
+        ], $messages, $customAttributes);
 
-        if ($errors) {
+        // Ak validácia zlyhá, vrátime chyby
+        if ($validator->fails()) {
+
             return [
-                'errors' => $errors
+                'errors' => $validator->errors()->toArray()
             ];
         }
 
-        $contact = Contact::query()
-            ->create(['name' => $name, 'email' => $email])
-            ->toArray();
+        // Validované a otrimované dáta
+        $validData = $validator->validated();
+
+        // Vytvor nový Contact v DB
+        $contact = Contact::query()->create([
+            'name' => $validData['name'],
+            'email' => $validData['email'],
+        ]);
 
         $html = view_content('contacts/_partials/table-row', ['contact' => $contact]);
 
